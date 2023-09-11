@@ -2,8 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:happy_button/Screens/detail.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
 
+  final List<String> text = [
+    '방귀',
+    '바리깡',
+    '접시깨짐',
+    '머리자르는 가위',
+    'xxxxhub',
+    '트름',
+    '뼈부러짐',
+    '모기',
+    '싸우는고양이',
+    'Air horn',
+    '차사고',
+    '닭울음소리',
+    '생일폭죽',
+    '뺨때리기',
+    '여자비명',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,22 +37,32 @@ class HomeScreen extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) =>
-                      DetailScreen(imagePath: imagePath, id: index),
+                  builder: (context) => DetailScreen(
+                      imagePath: imagePath, id: index, name: text[index]),
                 ),
               );
             },
             child: Hero(
               tag: imagePath,
-              child: Container(
-                color: Colors.blue, // 사각형의 배경색
-                margin: const EdgeInsets.all(10.0), // 사각형 간의 간격 조정
-                width: 50.0, // 사각형의 가로 길이
-                height: 50.0, // 사각형의 세로 길이
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.cover,
-                ),
+              child: Column(
+                children: [
+                  Container(
+                    color: Colors.blue, // 사각형의 배경색
+                    margin: const EdgeInsets.all(10.0), // 사각형 간의 간격 조정
+                    width: 100.0, // 사각형의 가로 길이
+                    height: 100.0, // 사각형의 세로 길이
+                    child: Image.asset(
+                      imagePath,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Text(
+                    text[index],
+                    style: const TextStyle(
+                      fontSize: 12.0,
+                    ),
+                  )
+                ],
               ),
             ),
           );

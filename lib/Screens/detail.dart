@@ -2,10 +2,14 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 class DetailScreen extends StatefulWidget {
-  final String imagePath;
+  final String imagePath, name;
   final num id;
 
-  const DetailScreen({super.key, required this.imagePath, required this.id});
+  const DetailScreen(
+      {super.key,
+      required this.imagePath,
+      required this.id,
+      required this.name});
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -14,6 +18,7 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   late AudioPlayer audioPlayer;
   late num id = widget.id;
+  late String name = widget.name;
   // String audioPath = 'sounds/sound1.mp3';
 
   @override
@@ -37,7 +42,7 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('상세 화면'),
+        title: Text(name),
       ),
       body: Center(
         child: GestureDetector(
