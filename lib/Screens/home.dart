@@ -1,31 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:happy_button/Screens/detail.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   final List<String> text = [
-    '방귀',
-    '바리깡',
-    '접시깨짐',
-    '머리자르는 가위',
+    'fart',
+    'clipper',
+    'plate',
+    'scissors',
     'xxxxhub',
-    '트름',
-    '뼈부러짐',
-    '모기',
-    '싸우는고양이',
-    'Air horn',
-    '차사고',
-    '닭울음소리',
-    '생일폭죽',
-    '뺨때리기',
-    '여자비명',
+    'burp',
+    'bone',
+    'mosquito',
+    'cat',
+    'horn',
+    'car',
+    'chicken',
+    'birthday',
+    'slap',
+    'scream',
   ];
+
+  String subText(int index, BuildContext context) {
+    String localeText;
+    if (index == 0) {
+      localeText = AppLocalizations.of(context)!.fart;
+    } else if (index == 1) {
+      localeText = AppLocalizations.of(context)!.clipper;
+    } else if (index == 2) {
+      localeText = AppLocalizations.of(context)!.plate;
+    } else if (index == 3) {
+      localeText = AppLocalizations.of(context)!.scissors;
+    } else if (index == 4) {
+      localeText = AppLocalizations.of(context)!.xxxxhub;
+    } else if (index == 5) {
+      localeText = AppLocalizations.of(context)!.burp;
+    } else if (index == 6) {
+      localeText = AppLocalizations.of(context)!.bone;
+    } else if (index == 7) {
+      localeText = AppLocalizations.of(context)!.mosquito;
+    } else if (index == 8) {
+      localeText = AppLocalizations.of(context)!.cat;
+    } else if (index == 9) {
+      localeText = AppLocalizations.of(context)!.horn;
+    } else if (index == 10) {
+      localeText = AppLocalizations.of(context)!.car;
+    } else if (index == 11) {
+      localeText = AppLocalizations.of(context)!.chicken;
+    } else if (index == 12) {
+      localeText = AppLocalizations.of(context)!.birthday;
+    } else if (index == 13) {
+      localeText = AppLocalizations.of(context)!.slap;
+    } else if (index == 14) {
+      localeText = AppLocalizations.of(context)!.scream;
+    } else {
+      localeText = 'error';
+    }
+    return localeText;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('장난치기 좋은 소리 모음'),
+        title: Text(AppLocalizations.of(context)!.title),
       ),
       body: GridView.count(
         crossAxisCount: 3, // 열의 수
@@ -38,7 +78,9 @@ class HomeScreen extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => DetailScreen(
-                      imagePath: imagePath, id: index, name: text[index]),
+                      imagePath: imagePath,
+                      id: index,
+                      name: subText(index, context)),
                 ),
               );
             },
@@ -57,7 +99,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    text[index],
+                    subText(index, context),
                     style: const TextStyle(
                       fontSize: 12.0,
                     ),
