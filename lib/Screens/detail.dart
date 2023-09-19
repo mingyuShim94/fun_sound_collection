@@ -19,6 +19,7 @@ class _DetailScreenState extends State<DetailScreen> {
   late AudioPlayer audioPlayer;
   late num id = widget.id;
   late String name = widget.name;
+
   // String audioPath = 'sounds/sound1.mp3';
 
   @override
@@ -58,9 +59,13 @@ class _DetailScreenState extends State<DetailScreen> {
           child: Hero(
             tag: widget.imagePath, // 이전 화면과 동일한 Hero 태그 사용
             child: Container(
+              clipBehavior: Clip.hardEdge,
               width: 300.0,
               height: 300.0,
-              color: Colors.blue,
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도를 설정
+              ),
               child: Image.asset(widget.imagePath, fit: BoxFit.cover),
             ),
           ),

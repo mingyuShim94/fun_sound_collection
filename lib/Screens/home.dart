@@ -65,50 +65,72 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.title),
+        title: Text(
+          AppLocalizations.of(context)!.title,
+        ),
+        centerTitle: true,
       ),
-      body: GridView.count(
-        crossAxisCount: 3, // 열의 수
-        shrinkWrap: true, // 그리드 크기를 내용에 맞게 축소
-        children: List.generate(15, (index) {
-          // 각 셀에 사각형 추가
-          final imagePath = 'assets/images/image${index + 1}.jpg';
-          return GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => DetailScreen(
-                      imagePath: imagePath,
-                      id: index,
-                      name: subText(index, context)),
-                ),
-              );
-            },
-            child: Hero(
-              tag: imagePath,
-              child: Column(
-                children: [
-                  Container(
-                    color: Colors.blue, // 사각형의 배경색
-                    margin: const EdgeInsets.all(10.0), // 사각형 간의 간격 조정
-                    width: 100.0, // 사각형의 가로 길이
-                    height: 100.0, // 사각형의 세로 길이
-                    child: Image.asset(
-                      imagePath,
-                      fit: BoxFit.cover,
-                    ),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: GridView.count(
+          mainAxisSpacing: 10.0,
+          crossAxisCount: 3, // 열의 수
+          children: List.generate(15, (index) {
+            // 각 셀에 사각형 추가
+            final imagePath = 'assets/images/image${index + 1}.jpg';
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => DetailScreen(
+                        imagePath: imagePath,
+                        id: index,
+                        name: subText(index, context)),
                   ),
-                  Text(
-                    subText(index, context),
-                    style: const TextStyle(
-                      fontSize: 12.0,
+                );
+              },
+              child: Hero(
+                tag: imagePath,
+                child: Column(
+                  children: [
+                    Container(
+                      clipBehavior: Clip.hardEdge,
+                      width: 110.0, // 사각형의 가로 길이
+                      height: 110.0, // 사각형의 세로 길이
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius:
+                            BorderRadius.circular(10.0), // 원하는 둥근 정도를 설정,
+                        image: DecorationImage(
+                          image: AssetImage(imagePath),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                  )
-                ],
+                    const SizedBox(height: 3.0),
+                    Container(
+                      width: 100,
+                      height: 15,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Center(
+                        child: Text(
+                          subText(index, context),
+                          style: const TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
+        ),
       ),
     );
   }
