@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:happy_button/Screens/detail.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:happy_button/native_api/local_notification.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -64,16 +65,23 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.lightGreen,
       appBar: AppBar(
+        backgroundColor: Colors.amber.shade300,
         title: Text(
           AppLocalizations.of(context)!.title,
+          style: const TextStyle(
+            fontSize: 25.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
         centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 20),
         child: GridView.count(
-          mainAxisSpacing: 10.0,
+          mainAxisSpacing: 5.0,
           crossAxisCount: 3, // 열의 수
           children: List.generate(15, (index) {
             // 각 셀에 사각형 추가
@@ -89,44 +97,56 @@ class HomeScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: Hero(
-                tag: imagePath,
-                child: Column(
-                  children: [
-                    Container(
-                      clipBehavior: Clip.hardEdge,
-                      width: 110.0, // 사각형의 가로 길이
-                      height: 110.0, // 사각형의 세로 길이
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius:
-                            BorderRadius.circular(10.0), // 원하는 둥근 정도를 설정,
-                        image: DecorationImage(
-                          image: AssetImage(imagePath),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+              child: Column(
+                children: [
+                  Container(
+                    clipBehavior: Clip.hardEdge,
+                    width: 120.0, // 사각형의 가로 길이
+                    height: 120.0, // 사각형의 세로 길이
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                          BorderRadius.circular(10.0), // 원하는 둥근 정도를 설정,
                     ),
-                    const SizedBox(height: 3.0),
-                    Container(
-                      width: 100,
-                      height: 15,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Center(
-                        child: Text(
-                          subText(index, context),
-                          style: const TextStyle(
-                            fontSize: 14.0,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              subText(index, context),
+                              style: const TextStyle(
+                                fontSize: 19.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 7.0),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Hero(
+                                tag: imagePath,
+                                child: Container(
+                                  clipBehavior: Clip.hardEdge,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10.0),
+                                    ),
+                                  ),
+                                  child: Image(
+                                    image: AssetImage(imagePath),
+                                    width: 75.0,
+                                    height: 75.0,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ]),
+                    ),
+                  ),
+                ],
               ),
             );
           }),
