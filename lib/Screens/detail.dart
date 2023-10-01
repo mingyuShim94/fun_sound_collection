@@ -5,6 +5,17 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:happy_button/native_api/local_notification.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:animated_button/animated_button.dart';
+import 'package:flutter/cupertino.dart';
+
+const List<String> _timerList = <String>[
+  '10초',
+  '30초',
+  '1분',
+  '2분',
+  '3분',
+  '5분',
+  '10분',
+];
 
 class DetailScreen extends StatefulWidget {
   final String imagePath, name;
@@ -60,6 +71,43 @@ class _DetailScreenState extends State<DetailScreen> {
     setState(() {
       _isPlaying = false;
     });
+  }
+
+  String _selectedTime = '10초'; // 기본값 설정
+  Future<void> _openTimePickerDialog() async {
+    final selectedTime = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('시간 선택'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: _timerList.map((time) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(time);
+                    },
+                    child: Text(
+                      time,
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
+
+    // 사용자가 시간을 선택한 경우, 선택한 값을 업데이트
+    if (selectedTime != null) {
+      setState(() {
+        _selectedTime = selectedTime;
+      });
+    }
   }
 
   @override
@@ -141,7 +189,8 @@ class _DetailScreenState extends State<DetailScreen> {
                     duration: 100,
                     color: Colors.amber.shade300,
                     onPressed: () {
-                      LocalNotification.timerNotification('sound${id + 1}', 5);
+                      // LocalNotification.timerNotification('sound${id + 1}', 5);
+                      _openTimePickerDialog();
                     },
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
