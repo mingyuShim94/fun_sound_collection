@@ -4,25 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:happy_button/native_api/local_notification.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
-
-  final List<String> text = [
-    'fart',
-    'clipper',
-    'plate',
-    'scissors',
-    'xxxxhub',
-    'burp',
-    'bone',
-    'mosquito',
-    'cat',
-    'horn',
-    'car',
-    'chicken',
-    'birthday',
-    'slap',
-    'scream',
-  ];
+  const HomeScreen({super.key});
 
   String subText(int index, BuildContext context) {
     String localeText;
@@ -64,14 +46,17 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.lightGreen,
       appBar: AppBar(
         backgroundColor: Colors.amber.shade300,
         title: Text(
           AppLocalizations.of(context)!.title,
-          style: const TextStyle(
-            fontSize: 25.0,
+          style: TextStyle(
+            fontSize: screenHeight * 0.04, // Responsive font size
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
@@ -79,21 +64,22 @@ class HomeScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding:
+            EdgeInsets.only(top: screenHeight * 0.02), // Responsive padding
         child: GridView.count(
-          mainAxisSpacing: 5.0,
-          crossAxisCount: 3, // 열의 수
+          mainAxisSpacing: screenHeight * 0.001, // Responsive spacing
+          crossAxisCount: 3, // Number of columns
           children: List.generate(15, (index) {
-            // 각 셀에 사각형 추가
             final imagePath = 'assets/images/image${index + 1}.jpg';
             return GestureDetector(
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => DetailScreen(
-                        imagePath: imagePath,
-                        id: index,
-                        name: subText(index, context)),
+                      imagePath: imagePath,
+                      id: index,
+                      name: subText(index, context),
+                    ),
                   ),
                 );
               },
@@ -101,49 +87,54 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Container(
                     clipBehavior: Clip.hardEdge,
-                    width: 120.0, // 사각형의 가로 길이
-                    height: 120.0, // 사각형의 세로 길이
+                    width: screenWidth * 0.3, // Responsive width
+                    height: screenWidth * 0.3, // Responsive height
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius:
-                          BorderRadius.circular(10.0), // 원하는 둥근 정도를 설정,
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(
+                          screenWidth * 0.02), // Responsive padding
                       child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              subText(index, context),
-                              style: const TextStyle(
-                                fontSize: 19.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            subText(index, context),
+                            style: TextStyle(
+                              fontSize:
+                                  screenHeight * 0.03, // Responsive font size
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
                             ),
-                            const SizedBox(height: 7.0),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Hero(
-                                tag: imagePath,
-                                child: Container(
-                                  clipBehavior: Clip.hardEdge,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10.0),
-                                    ),
-                                  ),
-                                  child: Image(
-                                    image: AssetImage(imagePath),
-                                    width: 75.0,
-                                    height: 75.0,
-                                    fit: BoxFit.cover,
+                          ),
+                          SizedBox(
+                              height:
+                                  screenHeight * 0.005), // Responsive spacing
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Hero(
+                              tag: imagePath,
+                              child: Container(
+                                clipBehavior: Clip.hardEdge,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
                                   ),
                                 ),
+                                child: Image(
+                                  image: AssetImage(imagePath),
+                                  width: screenWidth * 0.19, // Responsive width
+                                  height:
+                                      screenWidth * 0.19, // Responsive height
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            )
-                          ]),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

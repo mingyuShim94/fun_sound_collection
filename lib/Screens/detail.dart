@@ -7,14 +7,14 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:animated_button/animated_button.dart';
 import 'package:flutter/cupertino.dart';
 
-const List<String> _timerList = <String>[
-  '10초',
-  '30초',
-  '1분',
-  '2분',
-  '3분',
-  '5분',
-  '10분',
+const List<int> _timerList = <int>[
+  10,
+  30,
+  60,
+  120,
+  180,
+  300,
+  600,
 ];
 
 class DetailScreen extends StatefulWidget {
@@ -32,11 +32,11 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  late num id = widget.id;
+  late int id = widget.id.toInt();
   late String name = widget.name;
   final audioPlayer = AudioPlayer();
   bool _isPlaying = false; // 재생 상태 변수
-
+  bool _isSetTimer = false;
   @override
   void initState() {
     super.initState();
@@ -73,13 +73,17 @@ class _DetailScreenState extends State<DetailScreen> {
     });
   }
 
-  String _selectedTime = '10초'; // 기본값 설정
+  late int _selectedTime; // 기본값 설정
   Future<void> _openTimePickerDialog() async {
-    final selectedTime = await showDialog<String>(
+    final selectedTime = await showDialog<int>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('시간 선택'),
+          title: const Text(
+            '알림볼륨을 확인해주세요!',
+            style: TextStyle(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
           content: SingleChildScrollView(
             child: ListBody(
               children: _timerList.map((time) {
@@ -90,7 +94,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       Navigator.of(context).pop(time);
                     },
                     child: Text(
-                      time,
+                      '$time초',
                       style: const TextStyle(fontSize: 18),
                     ),
                   ),
@@ -106,12 +110,16 @@ class _DetailScreenState extends State<DetailScreen> {
     if (selectedTime != null) {
       setState(() {
         _selectedTime = selectedTime;
+        _isSetTimer = true;
       });
+      LocalNotification.timerNotification('sound${id + 1}', selectedTime, id);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.lightGreen,
       appBar: AppBar(
@@ -134,7 +142,16 @@ class _DetailScreenState extends State<DetailScreen> {
         child: Center(
           child: Column(
             children: [
-              const SizedBox(height: 150.0),
+              SizedBox(
+                  height:
+                      _isSetTimer ? screenHeight * 0.05 : screenHeight * 0.1),
+              if (_isSetTimer)
+                Text(
+                  '$_selectedTime초 후에 소리폭탄이 터집니다!!',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 25),
+                ),
+              SizedBox(height: screenHeight * 0.04),
               GestureDetector(
                 onTap: () async {
                   playMusic();
@@ -143,8 +160,8 @@ class _DetailScreenState extends State<DetailScreen> {
                   tag: widget.imagePath, // 이전 화면과 동일한 Hero 태그 사용
                   child: Container(
                     clipBehavior: Clip.hardEdge,
-                    width: 300.0,
-                    height: 300.0,
+                    width: screenWidth * 0.6,
+                    height: screenWidth * 0.6,
                     decoration: BoxDecoration(
                       color: Colors.blue,
                       borderRadius:
@@ -154,12 +171,12 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 40.0),
+              SizedBox(height: screenHeight * 0.04),
               Column(
                 children: [
                   AnimatedButton(
-                    width: 180,
-                    height: 80,
+                    width: screenWidth * 0.4,
+                    height: screenHeight * 0.1,
                     duration: 100,
                     color: Colors.amber.shade300,
                     onPressed: () {
@@ -174,35 +191,50 @@ class _DetailScreenState extends State<DetailScreen> {
                                 Icons.play_circle,
                                 size: 55,
                               ),
-                        const Text(
+                        Text(
                           '재생하기',
                           style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                              fontSize: screenWidth * 0.04,
+                              fontWeight: FontWeight.bold),
                         )
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20.0),
+                  SizedBox(height: screenHeight * 0.02),
                   AnimatedButton(
-                    width: 180,
-                    height: 80,
+                    width: screenWidth * 0.4,
+                    height: screenHeight * 0.1,
                     duration: 100,
                     color: Colors.amber.shade300,
                     onPressed: () {
-                      // LocalNotification.timerNotification('sound${id + 1}', 5);
-                      _openTimePickerDialog();
+                      if (_isSetTimer) {
+                        LocalNotification.cancelNotification(id);
+                        setState(() {
+                          _isSetTimer = false;
+                        });
+                      } else {
+                        _openTimePickerDialog();
+                      }
                     },
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Icon(Icons.alarm, size: 55),
-                        Text(
-                          '소리폭탄',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
+                    child: _isSetTimer
+                        ? Text(
+                            '취소하기',
+                            style: TextStyle(
+                                fontSize: screenWidth * 0.04,
+                                fontWeight: FontWeight.bold),
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Icon(Icons.alarm, size: 55),
+                              Text(
+                                '소리폭탄',
+                                style: TextStyle(
+                                    fontSize: screenWidth * 0.04,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
                   ),
                 ],
               )

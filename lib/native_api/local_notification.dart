@@ -55,7 +55,7 @@ class LocalNotification {
     );
   }
 
-  static Future<void> timerNotification(String sound, int time) async {
+  static Future<void> timerNotification(String sound, int time, int id) async {
     print('notification');
     AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
@@ -72,7 +72,7 @@ class LocalNotification {
 
     await _configureLocalTimeZone();
     await _flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
+      id,
       "장난치기좋은소리모음",
       '${sound}timer',
       tz.TZDateTime.now(tz.local).add(Duration(seconds: time)), // 예약 시간 설정
@@ -81,5 +81,11 @@ class LocalNotification {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
     );
+  }
+
+  static Future<void> cancelNotification(int id) async {
+    print('cancel_notification');
+
+    await _flutterLocalNotificationsPlugin.cancel(id);
   }
 }
