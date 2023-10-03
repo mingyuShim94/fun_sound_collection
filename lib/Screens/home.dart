@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:happy_button/Screens/detail.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:happy_button/native_api/local_notification.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:flutter/foundation.dart';
+
+const Map<String, String> UNIT_ID = kReleaseMode
+    ? {
+        //MyID
+        'android': 'ca-app-pub-8647279125417942~7035645273',
+      }
+    : {
+        //testID
+        'android': 'ca-app-pub-3940256099942544/6300978111',
+      };
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -49,6 +60,18 @@ class HomeScreen extends StatelessWidget {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
 
+    TargetPlatform os = Theme.of(context).platform;
+
+    BannerAd banner = BannerAd(
+      listener: BannerAdListener(
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {},
+        onAdLoaded: (_) {},
+      ),
+      size: AdSize.banner,
+      adUnitId: UNIT_ID[os == TargetPlatform.iOS ? 'ios' : 'android']!,
+      request: const AdRequest(),
+    )..load();
+
     return Scaffold(
       backgroundColor: Colors.lightGreen,
       appBar: AppBar(
@@ -87,8 +110,8 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Container(
                     clipBehavior: Clip.hardEdge,
-                    width: screenWidth * 0.3, // Responsive width
-                    height: screenWidth * 0.3, // Responsive height
+                    width: screenWidth * 0.31, // Responsive width
+                    height: screenWidth * 0.31, // Responsive height
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10.0),
@@ -103,14 +126,14 @@ class HomeScreen extends StatelessWidget {
                             subText(index, context),
                             style: TextStyle(
                               fontSize:
-                                  screenHeight * 0.03, // Responsive font size
+                                  screenHeight * 0.02, // Responsive font size
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
                           ),
                           SizedBox(
                               height:
-                                  screenHeight * 0.005), // Responsive spacing
+                                  screenHeight * 0.01), // Responsive spacing
                           Align(
                             alignment: Alignment.centerRight,
                             child: Hero(
@@ -125,9 +148,9 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 child: Image(
                                   image: AssetImage(imagePath),
-                                  width: screenWidth * 0.19, // Responsive width
+                                  width: screenWidth * 0.2, // Responsive width
                                   height:
-                                      screenWidth * 0.19, // Responsive height
+                                      screenWidth * 0.2, // Responsive height
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -142,6 +165,11 @@ class HomeScreen extends StatelessWidget {
             );
           }),
         ),
+      ),
+      bottomNavigationBar: Container(
+        color: Colors.amber.shade300,
+        height: screenHeight * 0.06, // Responsive height
+        child: AdWidget(ad: banner),
       ),
     );
   }

@@ -3,8 +3,11 @@ import 'package:happy_button/Screens/home.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:happy_button/native_api/local_notification.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   runApp(const MyApp());
 }
 
@@ -21,12 +24,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     LocalNotification.requestPermission();
-    return MaterialApp(localizationsDelegates: const [
+    return const MaterialApp(localizationsDelegates: [
       AppLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,
       GlobalWidgetsLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
-    ], supportedLocales: const [
+    ], supportedLocales: [
       Locale('en', ''), // English
       Locale('ko', ''), // korean
     ], home: HomeScreen());
