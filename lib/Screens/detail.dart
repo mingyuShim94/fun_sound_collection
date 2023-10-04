@@ -6,6 +6,7 @@ import 'package:happy_button/native_api/local_notification.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:animated_button/animated_button.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const List<int> _timerList = <int>[
   10,
@@ -37,6 +38,11 @@ class _DetailScreenState extends State<DetailScreen> {
   final audioPlayer = AudioPlayer();
   bool _isPlaying = false; // 재생 상태 변수
   bool _isSetTimer = false;
+
+  late Timer _timer;
+
+  late int _selectedTime; // 기본값 설정
+
   @override
   void initState() {
     super.initState();
@@ -53,6 +59,26 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   void dispose() async {
     super.dispose();
+  }
+
+  void _updateTimer(Timer timer) {
+    if (_selectedTime == 0) {
+      setState(() {
+        _isSetTimer = false;
+      });
+      timer.cancel();
+    } else {
+      setState(() {
+        _selectedTime = _selectedTime - 1;
+      });
+    }
+  }
+
+  void onStartPressed() {
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      _updateTimer,
+    );
   }
 
   void playMusic() async {
@@ -73,7 +99,6 @@ class _DetailScreenState extends State<DetailScreen> {
     });
   }
 
-  late int _selectedTime; // 기본값 설정
   Future<void> _openTimePickerDialog() async {
     final selectedTime = await showDialog<int>(
       context: context,
@@ -113,6 +138,7 @@ class _DetailScreenState extends State<DetailScreen> {
         _isSetTimer = true;
       });
       LocalNotification.timerNotification('sound${id + 1}', selectedTime, id);
+      onStartPressed();
     }
   }
 
@@ -137,6 +163,7 @@ class _DetailScreenState extends State<DetailScreen> {
       body: WillPopScope(
         onWillPop: () async {
           await audioPlayer.dispose();
+          _timer.cancel();
           return true;
         },
         child: Center(
