@@ -1,20 +1,13 @@
 {
     "@@locale": "en",
     "title":"fun sounds collection",
-    "fart":"fart",
-    "clipper":"hair clipper",
-    "plate":"plate",
-    "scissors": "scissors",
-    "xxxxhub":"xxxxhub",
-    "burp":"burp",
-    "bone":"bone",
-    "mosquito":"Mosquito",
-    "cat":"fighting cat",
-    "horn":"air horn",
-    "car":"accident",
-    "chicken":"chicken",
-    "birthday":"Birthday",
-    "slap":"slap",
-    "scream":"scream"
-
+    "sound_name":"{count, select, 0{fart} 1{clipper} 2{plate} 3{scissors} 4{xxxxhub} 5{burp} 6{bone} 7{mosquito} 8{cat} 9{horn} 10{car} 11{chicken} 12{birthday} 13{slap} 14{scream} other{}}",
+    "@sound_name": {
+        "description": "sound name",
+        "placeholders": {
+            "count": {
+                "type": "String"
+            }
+        }
+    }
 }

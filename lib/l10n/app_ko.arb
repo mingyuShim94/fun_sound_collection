@@ -1,22 +1,15 @@
 {
     "@@locale":"ko",
     "title":"장난치는소리모음",
-    "fart":"방귀",
-    "clipper":"바리깡",
-    "plate":"접시깨짐",
-    "scissors": "가위",
-    "xxxxhub":"xxxxhub",
-    "burp":"트름",
-    "bone":"뼈부러짐",
-    "mosquito":"모기",
-    "cat":"싸우는고양이",
-    "horn":"경적",
-    "car":"차사고",
-    "chicken":"닭울음소리",
-    "birthday":"생일폭죽",
-    "slap":"뺨때리기",
-    "scream":"비명소리"
-
+    "sound_name":"{count, select, 0{방귀} 1{바리깡} 2{접시깨짐} 3{가위} 4{xxxxhub} 5{트름} 6{뼈부러짐} 7{모기} 8{싸우는고양이} 9{경적} 10{차사고} 11{닭울음소리} 12{생일폭죽} 13{뺨때리기} 14{비명소리} other{}}",
+    "@sound_name": {
+        "description": "sound name",
+        "placeholders": {
+            "count": {
+                "type": "String"
+            }
+        }
+    }
 
 }
 

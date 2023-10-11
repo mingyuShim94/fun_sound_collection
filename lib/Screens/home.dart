@@ -3,6 +3,9 @@ import 'package:happy_button/Screens/detail.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:happy_button/provider/counter_provider.dart';
 
 const Map<String, String> UNIT_ID = kReleaseMode
     ? {
@@ -14,52 +17,23 @@ const Map<String, String> UNIT_ID = kReleaseMode
         'android': 'ca-app-pub-3940256099942544/6300978111',
       };
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  String subText(int index, BuildContext context) {
-    String localeText;
-    if (index == 0) {
-      localeText = AppLocalizations.of(context)!.fart;
-    } else if (index == 1) {
-      localeText = AppLocalizations.of(context)!.clipper;
-    } else if (index == 2) {
-      localeText = AppLocalizations.of(context)!.plate;
-    } else if (index == 3) {
-      localeText = AppLocalizations.of(context)!.scissors;
-    } else if (index == 4) {
-      localeText = AppLocalizations.of(context)!.xxxxhub;
-    } else if (index == 5) {
-      localeText = AppLocalizations.of(context)!.burp;
-    } else if (index == 6) {
-      localeText = AppLocalizations.of(context)!.bone;
-    } else if (index == 7) {
-      localeText = AppLocalizations.of(context)!.mosquito;
-    } else if (index == 8) {
-      localeText = AppLocalizations.of(context)!.cat;
-    } else if (index == 9) {
-      localeText = AppLocalizations.of(context)!.horn;
-    } else if (index == 10) {
-      localeText = AppLocalizations.of(context)!.car;
-    } else if (index == 11) {
-      localeText = AppLocalizations.of(context)!.chicken;
-    } else if (index == 12) {
-      localeText = AppLocalizations.of(context)!.birthday;
-    } else if (index == 13) {
-      localeText = AppLocalizations.of(context)!.slap;
-    } else if (index == 14) {
-      localeText = AppLocalizations.of(context)!.scream;
-    } else {
-      localeText = 'error';
-    }
-    return localeText;
-  }
-
+class HomeScreen extends ConsumerWidget {
+  HomeScreen({super.key});
+  final counterProvider = StateNotifierProvider((ref) => Counter());
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref.watch(counterProvider);
+
+    ref.listen(counterProvider, ((prev, next) {
+      print('현재상태: $prev, $next');
+    }));
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
 
+    Locale currentLocale = Localizations.localeOf(context);
+
+    bool isKorean = currentLocale.languageCode == 'ko';
+    print(isKorean);
     TargetPlatform os = Theme.of(context).platform;
 
     BannerAd banner = BannerAd(
@@ -101,7 +75,8 @@ class HomeScreen extends StatelessWidget {
                     builder: (context) => DetailScreen(
                       imagePath: imagePath,
                       id: index,
-                      name: subText(index, context),
+                      name: AppLocalizations.of(context)!
+                          .sound_name(index.toString()),
                     ),
                   ),
                 );
@@ -118,15 +93,18 @@ class HomeScreen extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(
-                          screenWidth * 0.02), // Responsive padding
+                          screenWidth * 0.01), // Responsive padding
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            subText(index, context),
+                            AppLocalizations.of(context)!
+                                .sound_name(index.toString()),
                             style: TextStyle(
-                              fontSize:
-                                  screenHeight * 0.02, // Responsive font size
+                              fontSize: isKorean
+                                  ? screenHeight * 0.02
+                                  : screenHeight *
+                                      0.026, // Responsive font size
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
