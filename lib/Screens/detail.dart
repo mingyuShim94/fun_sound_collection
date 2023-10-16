@@ -1,13 +1,9 @@
-import 'dart:math';
-
-import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:happy_button/native_api/local_notification.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:animated_button/animated_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -64,6 +60,9 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
   late int _selectedTime = 0; // 소리폭탄 설정 초
   late SharedPreferences sharedAlarmData; //알람시간 저장
   late DateTime alarmTime; // 소리폭탄 설정 시각(type:dateTime)
+
+  late SharedPreferences sharedBombCount; //소리폭탄 횟수 저장할 shared 변수
+
   @override
   void initState() {
     super.initState();
@@ -101,6 +100,14 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
       });
       onStartPressed();
     }
+  }
+
+  void saveBombCount() async {
+    ref.watch(counterProvider.notifier).increment();
+    final value = ref.watch(counterProvider) as int; //int
+    print(value.runtimeType);
+    sharedBombCount = await SharedPreferences.getInstance();
+    sharedBombCount.setInt('bombCount', value);
   }
 
   void onStartPressed() {
@@ -215,8 +222,6 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     final count = ref.watch(counterProvider);
-
-    print('count$count');
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
 
@@ -384,11 +389,13 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                             setState(() {
                               selected = !selected;
                             });
-                            ref.watch(counterProvider.notifier).increment();
+                            saveBombCount();
+                            //ref.watch(counterProvider.notifier).increment();
                           },
-                          child: const ColoredBox(
+                          child: ColoredBox(
                             color: Colors.blue,
-                            child: Center(child: Text('Tap me')),
+                            child: Center(
+                                child: Text('${ref.watch(counterProvider)}')),
                           ),
                         ),
                       ),

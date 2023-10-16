@@ -5,6 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:happy_button/native_api/local_notification.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:happy_button/provider/counter_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,15 +16,29 @@ void main() {
   );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  ConsumerState<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends ConsumerState<MyApp> {
   // This widget is the root of your application.
+
+  void loadBombCount() async {
+    final SharedPreferences sharedBombCount =
+        await SharedPreferences.getInstance();
+    final int bombCount = sharedBombCount.getInt('bombCount') ?? 10;
+    print('bombCount, $bombCount');
+    ref.watch(counterProvider.notifier).setCount(bombCount);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadBombCount();
+  }
 
   @override
   Widget build(BuildContext context) {
